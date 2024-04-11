@@ -57,40 +57,38 @@ class UserController extends Controller
         return response()->json(["msg"=>"User created, check your email","data"=>$user,],201);
     }
 
-    public function update(Request $request,int $id)
-    {   
-        $validate = Validator::make(
-            $request->all(),[
-                "name"=>"required|max:30",
-                "email"=>"unique:users|email",
-                "rol_id"=>"numeric|between:1,3",
-                "password"=>"min:8|string"
-            ]
-        );
+    public function update(Request $request, int $id)
+{
+    $validate = Validator::make(
+        $request->all(), [
+            "name" => "required|max:30",
+            // Excluye el ID del usuario actual de la validación unique
+            "email" => "required|email|unique:users,email,".$id,
+            "rol_id" => "numeric|between:1,3",
+            "password" => "min:8|string"
+        ]
+    );
 
-        if($validate->fails())
-        {
-            return response()->json(["msg"=>"Data failed",
-            "data:"=>$validate->errors()],422);
-        }
-        $user=User::find($id);
-        if($user)
-        {
-            $user->name=$request->get('name',$user->name);
-            $user->email=$request->get('email',$user->email);
-            $user->password=$request->get('password',$user->password);
-            $user->rol_id=$request->get('rol_id',$user->rol_id);
-            $user->save();
-            $data = " name: "  . $request->name . " email: " . $request->email . " password: " . $request->password . "rol_id: " . $request->rol_id;
-            $user_id = Auth::id();
-             LogHistoryController::store($request, 'user', $data, $user_id);
-            return response()->json(["msg"=>"User updated","data"=>$user,],202);
-        }
-        return response()->json([
-            "msg"   =>"Userd not found"
-        ],404);
-        
+    if ($validate->fails()) {
+        return response()->json(["msg" => "Data failed",
+        "data:" => $validate->errors()], 422);
     }
+    $user = User::find($id);
+    if ($user) {
+        $user->name = $request->get('name', $user->name);
+        $user->email = $request->get('email', $user->email);
+        $user->password = $request->get('password', $user->password);
+        $user->rol_id = $request->get('rol_id', $user->rol_id);
+        $user->save();
+        $data = " name: "  . $request->name . " email: " . $request->email . " password: " . $request->password . "rol_id: " . $request->rol_id;
+        $user_id = Auth::id();
+        LogHistoryController::store($request, 'user', $data, $user_id);
+        return response()->json(["msg" => "User updated", "data" => $user,], 202);
+    }
+    return response()->json([
+        "msg"   => "User not found"
+    ], 404);
+}
 
     public function destroy(Request $request,int $id)
     {
