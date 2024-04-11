@@ -1,0 +1,143 @@
+<div class="container text-center">
+    <h1 class="my-4">Citas</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Fecha de Cita</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th>Dispositivo</th>
+                <th>Usuario</th>
+                <th>Hora</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let cita of citas">
+                <td>{{ cita.id }}</td>
+                <td>{{ cita.fecha_cita }}</td>
+                <td>{{ cita.motivo_cita }}</td>
+                <td>{{ cita.estado_cita }}</td>
+                <td>{{ cita.dispositivo }}</td>
+                <td>{{ cita.usuario }}</td>
+                <td>{{ cita.hora_cita }}</td>
+                <td *ngIf="rolUsuario === 1 ">
+                    <button class="btn btn-primary mx-2" (click)="editarCita(cita)">Editar</button>
+                    <button class="btn btn-danger" (click)="eliminarCita(cita.id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <div *ngIf="rolUsuario === 1">
+      <form [formGroup]="nuevoCitaForm" (submit)="agregarCita()" class="container" novalidate *ngIf="!citaEditada">
+        <div class="form-group">
+          <label for="fecha_cita">Fecha de Cita:</label>
+          <input formControlName="fecha_cita" id="fecha_cita" type="date" class="form-control" required>
+          <div *ngIf="nuevoCitaForm.get('fecha_cita')?.errors?.['required'] && nuevoCitaForm.get('fecha_cita')?.touched" class="alert alert-danger">
+            La fecha de cita es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="motivo_cita">Motivo de Cita:</label>
+          <input formControlName="motivo_cita" id="motivo_cita" type="text" class="form-control" required>
+          <div *ngIf="nuevoCitaForm.get('motivo_cita')?.errors?.['required'] && nuevoCitaForm.get('motivo_cita')?.touched" class="alert alert-danger">
+            El motivo de cita es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="estado_cita">Estado de Cita:</label>
+          <input formControlName="estado_cita" id="estado_cita" type="text" class="form-control" required>
+          <div *ngIf="nuevoCitaForm.get('estado_cita')?.errors?.['required'] && nuevoCitaForm.get('estado_cita')?.touched" class="alert alert-danger">
+            El estado de cita es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dispositivo">Dispositivo:</label>
+          <select formControlName="dispositivo" id="dispositivo" class="form-control" required>
+            <option value="">Seleccionar Dispositivo</option>
+            <option *ngFor="let device of devices" [value]="device.id">{{ device.marca + " " + device.modelo }}</option>
+          </select>
+          <div *ngIf="nuevoCitaForm.get('dispositivo')?.errors?.['required'] && nuevoCitaForm.get('dispositivo')?.touched" class="alert alert-danger">
+            El dispositivo es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="usuario">Usuario:</label>
+          <select formControlName="usuario" id="usuario" class="form-control" required>
+            <option value="">Seleccionar Usuario</option>
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+          </select>
+          <div *ngIf="nuevoCitaForm.get('usuario')?.errors?.['required'] && nuevoCitaForm.get('usuario')?.touched" class="alert alert-danger">
+            El usuario es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="hora_cita">Hora de Cita:</label>
+          <input formControlName="hora_cita" id="hora_cita" type="time" class="form-control" required>
+          <div *ngIf="nuevoCitaForm.get('hora_cita')?.errors?.['required'] && nuevoCitaForm.get('hora_cita')?.touched" class="alert alert-danger">
+            La hora de cita es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!nuevoCitaForm.valid">Agregar Cita</button>
+      </form>
+    
+      <form *ngIf="citaEditada" [formGroup]="editarCitaForm" (submit)="actualizarCita()" class="container" novalidate>
+        <div class="form-group">
+          <label for="fecha_cita">Fecha de Cita:</label>
+          <input formControlName="fecha_cita" id="fecha_cita" type="date" class="form-control" required>
+          <div *ngIf="editarCitaForm.get('fecha_cita')?.errors?.['required'] && editarCitaForm.get('fecha_cita')?.touched" class="alert alert-danger">
+            La fecha de cita es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="motivo_cita">Motivo de Cita:</label>
+          <input formControlName="motivo_cita" id="motivo_cita" type="text" class="form-control" required>
+          <div *ngIf="editarCitaForm.get('motivo_cita')?.errors?.['required'] && editarCitaForm.get('motivo_cita')?.touched" class="alert alert-danger">
+            El motivo de cita es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="estado_cita">Estado de Cita:</label>
+          <input formControlName="estado_cita" id="estado_cita" type="text" class="form-control" required>
+          <div *ngIf="editarCitaForm.get('estado_cita')?.errors?.['required'] && editarCitaForm.get('estado_cita')?.touched" class="alert alert-danger">
+            El estado de cita es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dispositivo">Dispositivo:</label>
+          <select formControlName="dispositivo" id="dispositivo" class="form-control" required>
+            <option *ngFor="let device of devices" [value]="device.id">{{ device.marca + " " + device.modelo }}</option>
+          </select>
+          <div *ngIf="editarCitaForm.get('dispositivo')?.errors?.['required'] && editarCitaForm.get('dispositivo')?.touched" class="alert alert-danger">
+            El dispositivo es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="usuario">Usuario:</label>
+          <select formControlName="usuario" id="usuario" class="form-control" required>
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+          </select>
+          <div *ngIf="editarCitaForm.get('usuario')?.errors?.['required'] && editarCitaForm.get('usuario')?.touched" class="alert alert-danger">
+            El usuario es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="hora_cita">Hora de Cita:</label>
+          <input formControlName="hora_cita" id="hora_cita" type="time" class="form-control" required>
+          <div *ngIf="editarCitaForm.get('hora_cita')?.errors?.['required'] && editarCitaForm.get('hora_cita')?.touched" class="alert alert-danger">
+            La hora de cita es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!editarCitaForm.valid">Guardar Cambios</button>
+        <button type="button" (click)="cancelarEdicion()" class="btn btn-secondary">Cancelar</button>
+      </form>
+    </div>
+    
+              
+            
+    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+</div>          

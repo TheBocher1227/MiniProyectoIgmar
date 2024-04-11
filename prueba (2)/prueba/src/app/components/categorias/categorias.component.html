@@ -1,0 +1,62 @@
+<div *ngIf="sseMessage" class="alert alert-success">{{ sseMessage }}</div>
+<div class="container text-center">
+
+  
+  <div class="container">
+    <h1 class="my-4 text-center">Categorías</h1>
+    <div *ngIf="categories && categories.length > 0" class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo de Categoría</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories">
+            <td>{{ category.id }}</td>
+            <td>{{ category.tipo_categoria }}</td>
+            <td>
+              <button class="btn btn-primary mx-2" (click)="editCategory(category)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+              <button class="btn btn-danger" (click)="deleteCategory(category.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="!(categories && categories.length > 0)" class="alert alert-info">No hay categorías para mostrar.</div>
+    <div *ngIf="messageupdatevalid" class="alert alert-success">{{ messageupdatevalid }}</div>
+    <div *ngIf="this.messagedeletevalid" class="alert alert-success">{{ messagedeletevalid}}</div>
+    <div *ngIf="this.messagedeleteinvalid" class="alert alert-danger">{{ messagedeleteinvalid}}</div>
+  </div>      
+  <hr>
+  <div *ngIf="rolUsuario === 1 || rolUsuario === 3">
+    <form [formGroup]="categoriaform" (submit)="addCategory(categoriaform.value)" class="container" *ngIf="!selectedCategory ">
+      <div class="form-group">
+        <label for="tipo_categoria">Tipo de categoría:</label>
+        <input formControlName="tipo_categoria" id="tipo_categoria" class="form-control">
+        <div *ngIf="categoriaform.get('tipo_categoria')?.errors?.['required'] && categoriaform.get('tipo_categoria')?.touched" class="alert alert-danger">
+          El tipo de categoría es requerido
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar categoría</button>
+    </form>
+  
+    <form [formGroup]="updateForm" (submit)="updateCategory()" class="container" *ngIf="selectedCategory && !messagedeletevalid ">
+      <div class="form-group">
+        <label for="update-tipo_categoria">Tipo de categoría:</label>
+        <input formControlName="tipo_categoria" id="update-tipo_categoria" class="form-control">
+        <div *ngIf="updateForm.get('tipo_categoria')?.errors?.['required'] && updateForm.get('tipo_categoria')?.touched" class="alert alert-danger">
+          El tipo de categoría es requerido
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Actualizar categoría</button>
+      <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+    </form>
+  </div>
+  
+</div>
+
+
+  

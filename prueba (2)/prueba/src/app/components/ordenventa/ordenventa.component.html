@@ -1,0 +1,107 @@
+<div class="container text-center">
+    <h1 class="my-4">Órdenes de Venta</h1>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Fecha de Orden</th>
+          <th>Estado</th>
+          <th>Usuario</th>
+          <th>Tipo de Venta</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ordenVenta of ordenesVenta">
+          <td>{{ ordenVenta.id }}</td>
+          <td>{{ ordenVenta.fecha_orden }}</td>
+          <td>{{ ordenVenta.estado }}</td>
+          <td>{{ getUserName(ordenVenta.user) }}</td>
+          <td>{{ ordenVenta.tipo_venta }}</td>
+          <td>
+            <button class="btn btn-primary mx-2" (click)="editarOrdenVenta(ordenVenta)" *ngIf="rolUsuario === 1">Editar</button>
+            <button class="btn btn-danger" (click)="eliminarOrdenVenta(ordenVenta.id)" *ngIf="rolUsuario === 1 ">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <hr>
+  
+    <div *ngIf="rolUsuario === 1 || rolUsuario === 3">
+      <form [formGroup]="nuevoOrdenForm" (submit)="agregarOrdenVenta()" class="container" novalidate *ngIf="!ordenEditada">
+        <div class="form-group">
+          <label for="fechaOrden">Fecha de Orden:</label>
+          <input formControlName="fechaOrden" id="fechaOrden" type="date" class="form-control">
+          <div *ngIf="nuevoOrdenForm.get('fechaOrden')?.errors?.['required'] && nuevoOrdenForm.get('fechaOrden')?.touched" class="alert alert-danger">
+            La fecha de orden es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="estado">Estado:</label>
+          <input formControlName="estado" id="estado" type="text" class="form-control">
+          <div *ngIf="nuevoOrdenForm.get('estado')?.errors?.['required'] && nuevoOrdenForm.get('estado')?.touched" class="alert alert-danger">
+            El estado es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="user">Usuario:</label>
+          <select formControlName="user" id="user" class="form-control">
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+          </select>
+          <div *ngIf="nuevoOrdenForm.get('user')?.errors?.['required'] && nuevoOrdenForm.get('user')?.touched" class="alert alert-danger">
+            El usuario es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tipoVenta">Tipo de Venta:</label>
+          <input formControlName="tipoVenta" id="tipoVenta" type="text" class="form-control">
+          <div *ngIf="nuevoOrdenForm.get('tipoVenta')?.errors?.['required'] && nuevoOrdenForm.get('tipoVenta')?.touched" class="alert alert-danger">
+            El tipo de venta es requerido
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!nuevoOrdenForm.valid">Agregar Orden de Venta</button>
+      </form>
+    
+      <form *ngIf="ordenEditada" [formGroup]="editarOrdenForm" (submit)="actualizarOrdenVenta()" class="container" novalidate>
+        <div class="form-group">
+          <label for="fechaOrden">Fecha de Orden:</label>
+          <input formControlName="fechaOrden" id="fechaOrden" type="date" class="form-control">
+          <div *ngIf="editarOrdenForm.get('fechaOrden')?.errors?.['required'] && editarOrdenForm.get('fechaOrden')?.touched" class="alert alert-danger">
+            La fecha de orden es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="estado">Estado:</label>
+          <input formControlName="estado" id="estado" type="text" class="form-control">
+          <div *ngIf="editarOrdenForm.get('estado')?.errors?.['required'] && editarOrdenForm.get('estado')?.touched" class="alert alert-danger">
+            El estado es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="user">Usuario:</label>
+          <select formControlName="user" id="user" class="form-control">
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+          </select>
+          <div *ngIf="editarOrdenForm.get('user')?.errors?.['required'] && editarOrdenForm.get('user')?.touched" class="alert alert-danger">
+            El usuario es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="tipoVenta">Tipo de Venta:</label>
+          <input formControlName="tipoVenta" id="tipoVenta" type="text" class="form-control">
+          <div *ngIf="editarOrdenForm.get('tipoVenta')?.errors?.['required'] && editarOrdenForm.get('tipoVenta')?.touched" class="alert alert-danger">
+            El tipo de venta es requerido
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!editarOrdenForm.valid">
+          Guardar cambios
+        </button>
+        <button type="button" (click)="cancelarEdicion()" class="btn btn-secondary">Cancelar</button>
+      </form>
+    </div>
+  
+    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+  </div>
+  

@@ -1,0 +1,95 @@
+<div class="container text-center">
+    <h1 class="my-4">Órdenes de Venta de Accesorios</h1>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Orden de Venta</th>
+          <th>Accesorio</th>
+          <th>Cantidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ordenVentaA of ordenesVentaA">
+          <td>{{ ordenVentaA.id }}</td>
+          <td>{{ ordenVentaA.orden_venta }}</td>
+          <td>{{ getAccesorioName(ordenVentaA.accesorio) }}</td>
+          <td>{{ ordenVentaA.cantidad }}</td>
+          <td *ngIf="rolUsuario === 1 ">
+            <button class="btn btn-primary mx-2" (click)="editarOrdenVenta(ordenVentaA)">Editar</button>
+            <button class="btn btn-danger" (click)="eliminarOrdenVenta(ordenVentaA.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <hr>
+  
+    <div *ngIf="rolUsuario === 1">
+      <form [formGroup]="nuevoOrdenForm" (submit)="agregarOrdenVenta()" class="container" novalidate *ngIf="!ordenEditada">
+        <div class="form-group">
+          <label for="orden_venta">Orden de Venta:</label>
+          <select formControlName="orden_venta" id="nuevaOrdenVenta" class="form-control" required>
+            <option value="">Seleccionar Orden de Venta</option>
+            <option *ngFor="let ordenVenta of ordenesVenta" [value]="ordenVenta.id">{{ ordenVenta.id }}</option>
+          </select> 
+          <div *ngIf="nuevoOrdenForm.get('orden_venta')?.errors?.['required'] && nuevoOrdenForm.get('orden_venta')?.touched" class="alert alert-danger">
+            La orden de venta es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="accesorio">Accesorio:</label>
+          <select formControlName="accesorio" id="accesorio" class="form-control" required>
+            <option *ngFor="let accesorio of accesorios" [value]="accesorio.id">{{ accesorio.nombre }}</option>
+          </select>
+          <div *ngIf="nuevoOrdenForm.get('accesorio')?.errors?.['required'] && nuevoOrdenForm.get('accesorio')?.touched" class="alert alert-danger">
+            El accesorio es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cantidad">Cantidad:</label>
+          <input formControlName="cantidad" id="cantidad" type="number" class="form-control">
+          <div *ngIf="nuevoOrdenForm.get('cantidad')?.errors?.['required'] && nuevoOrdenForm.get('cantidad')?.touched" class="alert alert-danger">
+            La cantidad es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!nuevoOrdenForm.valid">Agregar Orden de Venta</button>
+      </form>
+    
+      <form *ngIf="ordenEditada" [formGroup]="editarOrdenForm" (submit)="actualizarOrdenVenta()" class="container" novalidate>
+        <div class="form-group">
+          <label for="orden_venta">Orden de Venta:</label>
+          <select formControlName="orden_venta" id="orden_venta" class="form-control" required>
+            <option *ngFor="let ordenVenta of ordenesVenta" [value]="ordenVenta.id">{{ ordenVenta.id }}</option>
+          </select>
+          <div *ngIf="editarOrdenForm.get('orden_venta')?.errors?.['required'] && editarOrdenForm.get('orden_venta')?.touched" class="alert alert-danger">
+            La orden de venta es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="accesorio">Accesorio:</label>
+          <select formControlName="accesorio" id="accesorio" class="form-control" required>
+            <option *ngFor="let accesorio of accesorios" [value]="accesorio.id">{{ accesorio.nombre }}</option>
+          </select>
+          <div *ngIf="editarOrdenForm.get('accesorio')?.errors?.['required'] && editarOrdenForm.get('accesorio')?.touched" class="alert alert-danger">
+            El accesorio es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cantidad">Cantidad:</label>
+          <input formControlName="cantidad" id="cantidad" type="number" class="form-control">
+          <div *ngIf="editarOrdenForm.get('cantidad')?.errors?.['required'] && editarOrdenForm.get('cantidad')?.touched" class="alert alert-danger">
+            La cantidad es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!editarOrdenForm.valid">Guardar Cambios</button>
+        <button type="button" (click)="cancelarEdicion()" class="btn btn-secondary">Cancelar</button>
+      </form>
+  </div>
+      
+  
+    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+  </div>
+  

@@ -1,0 +1,128 @@
+<div class="container text-center">
+    <div class="container text-center">
+        <h1 class="my-4">Accesorios</h1>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Numero</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let accesorio of accesorios">
+                    <td>{{ accesorio.id }}</td>
+                    <td>{{ accesorio.nombre }}</td>
+                    <td>{{ accesorio.descripcion }}</td>
+                    <td>{{ accesorio.precio }}</td>
+                    <td>{{ accesorio.cantidad }}</td>
+                    <td>{{ getCategoriaName(+accesorio.categoria) }}</td>
+                    <td>
+                        <button class="btn btn-primary mx-2" (click)="editAccesorio(accesorio)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+                        <button class="btn btn-danger" (click)="deleteAccesorio(accesorio.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Aquí iría el resto de tu código... -->
+    </div>
+    
+    <hr>
+    
+    <div *ngIf=" rolUsuario === 1 || rolUsuario === 3">
+      <form [formGroup]="newAccesorioForm" (submit)="addAccesorio(newAccesorioForm.value)" class="my-4" *ngIf="!selectedAccesorio">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input formControlName="nombre" id="nombre" class="form-control">
+          <div *ngIf="newAccesorioForm.get('nombre')?.errors?.['required'] && newAccesorioForm.get('nombre')?.touched" class="alert alert-danger">
+            El nombre es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <input formControlName="descripcion" id="descripcion" class="form-control">
+          <div *ngIf="newAccesorioForm.get('descripcion')?.errors?.['required'] && newAccesorioForm.get('descripcion')?.touched" class="alert alert-danger">
+            La descripción es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="precio">Precio:</label>
+          <input formControlName="precio" id="precio" type="number" class="form-control">
+          <div *ngIf="newAccesorioForm.get('precio')?.errors?.['required'] && newAccesorioForm.get('precio')?.touched" class="alert alert-danger">
+            El precio es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cantidad">Cantidad:</label>
+          <input formControlName="cantidad" id="cantidad" type="number" class="form-control">
+          <div *ngIf="newAccesorioForm.get('cantidad')?.errors?.['required'] && newAccesorioForm.get('cantidad')?.touched" class="alert alert-danger">
+            La cantidad es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="categoria">Categoría:</label>
+          <select formControlName="categoria" id="categoria" class="form-control">
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.tipo_categoria }}</option>
+          </select>
+          <div *ngIf="newAccesorioForm.get('categoria')?.errors?.['required'] && newAccesorioForm.get('categoria')?.touched" class="alert alert-danger">
+            La categoría es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!newAccesorioForm.valid">Agregar Accesorio</button>
+      </form>
+      
+      <form [formGroup]="editAccesorioForm" (submit)="updateAccesorio()" class="my-4" *ngIf="selectedAccesorio">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input formControlName="nombre" id="nombre" class="form-control">
+          <div *ngIf="editAccesorioForm.get('nombre')?.errors?.['required'] && editAccesorioForm.get('nombre')?.touched" class="alert alert-danger">
+            El nombre es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <input formControlName="descripcion" id="descripcion" class="form-control">
+          <div *ngIf="editAccesorioForm.get('descripcion')?.errors?.['required'] && editAccesorioForm.get('descripcion')?.touched" class="alert alert-danger">
+            La descripción es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="precio">Precio:</label>
+          <input formControlName="precio" id="precio" type="number" class="form-control">
+          <div *ngIf="editAccesorioForm.get('precio')?.errors?.['required'] && editAccesorioForm.get('precio')?.touched" class="alert alert-danger">
+            El precio es requerido
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cantidad">Cantidad:</label>
+          <input formControlName="cantidad" id="cantidad" type="number" class="form-control"> 
+          <div *ngIf="editAccesorioForm.get('cantidad')?.errors?.['required'] && editAccesorioForm.get('cantidad')?.touched" class="alert alert-danger">
+            La cantidad es requerida
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="categoria">Categoría:</label>
+          <select formControlName="categoria" id="categoria" class="form-control">
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.tipo_categoria }}</option>
+          </select>
+          <div *ngIf="editAccesorioForm.get('categoria')?.errors?.['required'] && editAccesorioForm.get('categoria')?.touched" class="alert alert-danger">
+            La categoría es requerida
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!editAccesorioForm.valid">Guardar cambios</button>
+        <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+      </form>     
+    </div>
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+
+    
+
+
+  
+  

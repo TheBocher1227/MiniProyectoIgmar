@@ -1,0 +1,95 @@
+<!-- components/devices/devices.component.html -->
+<div class="container text-center">
+  <div class="container">
+      <h1 class="my-4 text-center">Dispositivos</h1>
+      <div *ngIf="devices && devices.length > 0" class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Numero</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>Tipo de Dispositivo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead> 
+          <tbody>
+            <tr *ngFor="let device of devices">
+              <td>{{ device.id }}</td>
+              <td>{{ device.marca }}</td>
+              <td>{{ device.modelo }}</td>
+              <td>{{ device.tipo_dispositivos }}</td>
+              <td>
+                <button class="btn btn-primary mx-2" (click)="editDevice(device)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+                <button class="btn btn-danger" (click)="deleteDevice(device.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="messageupdatevalid" class="alert alert-success">{{ messageupdatevalid }}</div>
+      <div *ngIf="messagedeletevalid" class="alert alert-success">{{ messagedeletevalid }}</div>
+      <div *ngIf="!(devices && devices.length > 0)" class="alert alert-info">No hay dispositivos para mostrar.</div>
+    </div>
+  <hr>
+
+  <div *ngIf="rolUsuario === 1 || rolUsuario === 3">
+    <form [formGroup]="newDeviceForm" (submit)="addDevice(newDeviceForm.value)" class="container" novalidate *ngIf="!selectedDevice">
+      <div class="form-group">
+        <label for="new-marca">Marca:</label>
+        <input formControlName="marca" id="new-marca" class="form-control">
+        <div *ngIf="newDeviceForm.get('marca')?.errors?.['required'] && newDeviceForm.get('marca')?.touched" class="alert alert-danger">
+          La marca es requerida
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="new-modelo">Modelo:</label>
+        <input formControlName="modelo" id="new-modelo" class="form-control">
+        <div *ngIf="newDeviceForm.get('modelo')?.errors?.['required'] && newDeviceForm.get('modelo')?.touched" class="alert alert-danger">
+          El modelo es requerido
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="new-tipo-dispositivo">Tipo de dispositivo:</label>
+        <input formControlName="tipo_dispositivos" id="new-tipo-dispositivo" class="form-control">
+        <div *ngIf="newDeviceForm.get('tipo_dispositivos')?.errors?.['required'] && newDeviceForm.get('tipo_dispositivos')?.touched" class="alert alert-danger">
+          El tipo de dispositivo es requerido
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!newDeviceForm.valid">Agregar dispositivo</button>
+    </form>
+  
+  
+    <form *ngIf="selectedDevice&& !messagedeletevalid " [formGroup]="EditForm" (submit)="updateDevice()" class="container" novalidate >
+      <div class="form-group">
+        <label for="marca">Marca:</label>
+        <input formControlName="marca" id="marca" class="form-control">
+        <div *ngIf="EditForm.get('marca')?.errors?.['required'] && EditForm.get('marca')?.touched" class="alert alert-danger">
+          La marca es requerida
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="modelo">Modelo:</label>
+        <input formControlName="modelo" id="modelo" class="form-control">
+        <div *ngIf="EditForm.get('modelo')?.errors?.['required'] && EditForm.get('modelo')?.touched" class="alert alert-danger">
+          El modelo es requerido
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tipo_dispositivo">Tipo de dispositivo:</label>
+        <input formControlName="tipo_dispositivos" id="tipo_dispositivo" class="form-control">
+        <div *ngIf="EditForm.get('tipo_dispositivos')?.errors?.['required'] && EditForm.get('tipo_dispositivos')?.touched" class="alert alert-danger">
+          El tipo de dispositivo es requerido
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!EditForm.valid">Guardar cambios</button>
+      <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+    </form>
+  </div>
+  
+
+
+
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+    
+  </div>

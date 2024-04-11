@@ -1,0 +1,80 @@
+<div class="container text-center">
+    <h1 class="my-4">Reportes</h1>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Precio</th>
+          <th>Fecha de Entrega</th>
+          <th>Ingreso</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reporte of reportes">
+          <td>{{ reporte.id }}</td>
+          <td>{{ reporte.precio }}</td>
+          <td>{{ reporte.fecha_entrega }}</td>
+          <td>{{ reporte.ingreso }}</td>
+          <td *ngIf="rolUsuario === 1 ">
+            <button class="btn btn-primary mx-2" (click)="editarReporte(reporte)">Editar</button>
+            <button class="btn btn-danger" (click)="eliminarReporte(reporte.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="container text-center">
+      <h1 class="my-4">Reportes</h1>
+    
+      <!-- Formulario para agregar un nuevo reporte -->
+      <form *ngIf="rolUsuario === 1 && !edicionActiva" [formGroup]="nuevoReporteForm" (ngSubmit)="agregarReporte()" class="my-4">
+        <div class="form-group">
+          <label for="nuevoPrecio">Precio:</label>
+          <input type="number" formControlName="precio" id="nuevoPrecio" class="form-control" required>
+          <div *ngIf="nuevoReporteForm.get('precio')?.errors?.['required'] && nuevoReporteForm.get('precio')?.touched" class="alert alert-danger">
+            El precio es requerido.
+          </div>
+          <div *ngIf="nuevoReporteForm.get('precio')?.errors?.['min'] && nuevoReporteForm.get('precio')?.touched" class="alert alert-danger">
+            El precio debe ser mayor a 0.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="nuevaFechaEntrega">Fecha de Entrega:</label>
+          <input type="date" formControlName="fecha_entrega" id="nuevaFechaEntrega" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="nuevoIngreso">Ingreso:</label>
+          <select formControlName="ingreso" id="nuevoIngreso" class="form-control" required>
+            <option *ngFor="let ingreso of ingresos" [value]="ingreso.id">{{ ingreso.id }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!nuevoReporteForm.valid">Agregar Reporte</button>
+      </form>
+  
+      <!-- Formulario para editar un reporte -->
+      <form *ngIf="edicionActiva && reporteEditado" [formGroup]="editarReporteForm" (ngSubmit)="actualizarReporte()" class="container">
+        <div class="form-group">
+          <label for="editPrecio">Precio:</label>
+          <input type="number" formControlName="precio" id="editPrecio" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="editFechaEntrega">Fecha de Entrega:</label>
+          <input type="date" formControlName="fecha_entrega" id="editFechaEntrega" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="editIngreso">Ingreso:</label>
+          <select formControlName="ingreso" id="editIngreso" class="form-control" required>
+            <option *ngFor="let ingreso of ingresos" [value]="ingreso.id">{{ ingreso.id }}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      <button type="button" (click)="cancelarEdicion()" class="btn btn-secondary">Cancelar</button>
+    </form>
+  
+    
+  
+    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+  </div>
+  
