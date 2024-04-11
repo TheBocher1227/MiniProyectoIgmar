@@ -59,7 +59,7 @@ export class CategoriesComponent implements OnInit {
           this.loadCategories();
           console.log(message);
           setTimeout(() => {
-            this.sseMessage = ''; // Oculta el mensaje después de 3 segundos
+            this.sseMessage = '';
           }, 1000);
         }
         

@@ -60,6 +60,7 @@ class ReparacionesController extends Controller
           {
             $reparacion->tipo_reparaciones=$request->get('tipo_reparaciones',$reparacion->tipo_reparaciones);
             $reparacion->save();
+            event(New NuevaReparacion($reparacion));
             $data = " tipo_reparaciones: "  . $request->tipo_reparaciones ;
             $user_id = Auth::id();
             LogHistoryController::store($request, 'tiporeparacion', $data, $user_id);
@@ -79,12 +80,18 @@ class ReparacionesController extends Controller
         if($reparacion)
         {
           $data = " tipo_reparaciones: "  . $request->tipo_reparaciones ;
+          event(New NuevaReparacion($reparacion));
           $reparacion->delete();
+          
           $user_id = Auth::id();
           LogHistoryController::store($request, 'tiporeparacion', $data, $user_id);
           return response()->json(["reparacion eliminada correctamente"],200);
         }
-        return response()->json(["No se encontro la reparacion"],404);
+        
+        else{
+           return response()->json(["No se encontro la reparacion"],404);
+        }
+        
     }
 
 }

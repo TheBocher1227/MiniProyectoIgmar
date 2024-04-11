@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class AddCreatedAtToCategoriasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categorias', function (Blueprint $table){
-      $table->id();
-      $table->String('tipo_categoria');
-      $table->timestamps(); 
+        Schema::table('categorias', function (Blueprint $table) {
+            $table->timestamps(); // Esto agrega las columnas 'created_at' y 'updated_at'
         });
     }
 
@@ -27,6 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categorias');
+        Schema::table('categorias', function (Blueprint $table) {
+            $table->dropTimestamps();
+        });
     }
-};
+}
+

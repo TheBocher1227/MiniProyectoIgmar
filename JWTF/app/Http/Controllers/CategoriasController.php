@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Categoria;
-
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CategoriasController extends Controller
 {
@@ -19,9 +19,6 @@ class CategoriasController extends Controller
         return response()->json(["msg"=>"categorias encontradas",
         "data :"=>Categoria::all()],200);
     }
-
-
-
     public function store(Request $request)
     {
         $validate = Validator::make(
@@ -49,9 +46,6 @@ class CategoriasController extends Controller
     
         return response()->json(["msg" => "Categoria agregada correctamente"], 200);
     }
-    
-
-
     public function update(Request $request,int $id)
     {
       $validate = Validator::make(
@@ -81,9 +75,6 @@ class CategoriasController extends Controller
 
 
     }
-
-
-
     public function delete(Request $request,int $id)
     {
         $categoria = Categoria::find($id);
@@ -98,6 +89,31 @@ class CategoriasController extends Controller
           return response()->json(["msg"=>"Categoria eliminada correctamente","data"=>$categoria],200);
         }
         return response()->json(["msg"=>"No se encontro la categoria"],404);
+    }
+
+
+    public function sendSSE()
+    {
+        $response = new StreamedResponse(function () {
+                $categoria = Categoria::latest()->first();
+                if($categoria)
+                {
+                    $sseMessage = "data: " . json_encode($categoria) . "\n\n";
+                    echo $sseMessage;
+                }
+                else
+                {
+                    echo "\n\n";
+                }               
+                ob_flush();
+                flush();
+                die();
+                
+        });
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+        return $response;
     }
     
    

@@ -16,13 +16,14 @@ export class Auth2Guard implements CanActivate {
       this.router.navigate(['/login']);
       return of(false);
     }
-
     return this.authService.verifyToken(token).pipe(
       map((response) => {
         return response.status === 200; // Si el estado de la respuesta es 200, retorna true
       }),
       catchError((error) => {
-        this.router.navigate(['/login']); // En caso de error, redirecciona a la página de login
+        setTimeout(() => {
+          this.router.navigateByUrl('/login'); 
+        }, 0);
         return of(false);
       })
     );

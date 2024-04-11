@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Reparacion } from '../../Interfaces/reparacion';
 import { ReparacionService } from '../../services/reparacion.service';
 import { ServerResponse } from '../../Interfaces/server-respone';
@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiResponse, ApiResponse2 } from '../../Interfaces/api-response';
+import Echo from 'laravel-echo';
+import { ChangeDetectorRef } from '@angular/core';
+import Pusher from 'pusher-js';
 
 @Component({
   selector: 'app-reparaciones',
@@ -15,7 +18,8 @@ import { ApiResponse, ApiResponse2 } from '../../Interfaces/api-response';
   imports: [CommonModule, RouterModule, FormsModule],
   styleUrls: ['./reparaciones.component.css']
 })
-export class ReparacionesComponent implements OnInit {
+export class ReparacionesComponent implements OnInit, OnDestroy {
+  echo: Echo | undefined;
   newReparacion: Reparacion = { id: 0, tipo_reparaciones: '' };
   reparaciones: Reparacion[] | undefined;
   message: string | null = null;
@@ -29,6 +33,35 @@ export class ReparacionesComponent implements OnInit {
   ngOnInit(): void {
     this.loadReparaciones();
     this.loadUserRole();
+    this.setupWebSocket();
+  }
+  ngOnDestroy(): void {
+    this.closeWebSocket();
+  }
+  setupWebSocket(): void {
+    (window as any).Pusher = Pusher;
+    this.echo = new Echo({
+      broadcaster: 'pusher',
+      key: '123', 
+      cluster: 'mt1',
+      encrypted: false,
+      wsHost: window.location.hostname,
+      wsPort: 6001,
+      forceTLS: false,
+      disableStatus: true
+    });
+
+    this.echo.channel('nuevareparacion').listen('.App\\Events\\NuevaReparacion', (e: any) => {
+      console.log(e);
+     
+      this.loadReparaciones(); 
+    });
+  }
+
+  closeWebSocket(): void {
+    if (this.echo) {
+      this.echo.disconnect();
+    }
   }
 
   loadReparaciones(): void {
@@ -54,7 +87,6 @@ export class ReparacionesComponent implements OnInit {
     const newReparacion: Reparacion = { id: 0, tipo_reparaciones: newReparacionValue };
     this.reparacionService.addReparacion(newReparacion, token).subscribe(
       response => {
-        this.loadReparaciones();
         this.registerMessage = response.msg;
         this.message = response.msg;
       },
@@ -75,7 +107,7 @@ export class ReparacionesComponent implements OnInit {
     if (this.tempReparacion) {
       this.reparacionService.updateReparacion(this.tempReparacion, token).subscribe(
         response => {
-          this.loadReparaciones();
+          
           this.selectedReparacion = null;
           this.tempReparacion = null;
           this.registerMessage = response.msg;
@@ -94,7 +126,7 @@ export class ReparacionesComponent implements OnInit {
     const token = localStorage.getItem('token') || '';
     this.reparacionService.deleteReparacion(id, token).subscribe(
       response => {
-        this.loadReparaciones();
+        this.setupWebSocket();
         this.registerMessage = response.msg;
         this.message = response.msg;
       },
