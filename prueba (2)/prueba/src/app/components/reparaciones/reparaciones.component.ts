@@ -5,7 +5,7 @@ import { ServerResponse } from '../../Interfaces/server-respone';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiResponse, ApiResponse2 } from '../../Interfaces/api-response';
 import Echo from 'laravel-echo';
 import { ChangeDetectorRef } from '@angular/core';
@@ -15,7 +15,7 @@ import Pusher from 'pusher-js';
   selector: 'app-reparaciones',
   standalone: true,
   templateUrl: './reparaciones.component.html',
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
   styleUrls: ['./reparaciones.component.css']
 })
 export class ReparacionesComponent implements OnInit {
@@ -27,13 +27,20 @@ export class ReparacionesComponent implements OnInit {
   selectedReparacion: Reparacion | null = null;
   tempReparacion: Reparacion | null = null;
   registerMessage: string | null = null;
-
-  constructor(private reparacionService: ReparacionService, private authService: AuthService) {}
+  newReparacionForm: FormGroup = new FormGroup({});
+  EditForm: FormGroup = new FormGroup({});
+  constructor(private reparacionService: ReparacionService, private authService: AuthService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.loadReparaciones();
     this.loadUserRole();
     this.setupWebSocket();
+    this.EditForm = this.fb.group({
+      tipo_reparaciones: ['', Validators.required]
+    });
+    this.newReparacionForm = this.fb.group({
+      tipo_reparaciones: ['', Validators.required]
+    });
   }
   ngOnDestroy(): void {
     this.closeWebSocket();
@@ -86,11 +93,12 @@ export class ReparacionesComponent implements OnInit {
   addReparacion(newReparacionValue: string): void {
     const token = localStorage.getItem('token') || '';
     const newReparacion: Reparacion = { id: 0, tipo_reparaciones: newReparacionValue };
-    this.reparacionService.addReparacion(newReparacion, token).subscribe(
+    this.reparacionService.addReparacion(this.newReparacionForm.value, token).subscribe(
       response => {
         this.loadReparaciones();
         this.registerMessage = response.msg;
         this.message = response.msg;
+        this.newReparacionForm.reset();
       },
       error => {
         this.registerMessage = 'Error al agregar reparación. Por favor, inténtelo de nuevo.';
@@ -102,11 +110,16 @@ export class ReparacionesComponent implements OnInit {
   editReparacion(reparacion: Reparacion): void {
     this.selectedReparacion = reparacion;
     this.tempReparacion = { ...reparacion };
+    this.EditForm.patchValue({
+      tipo_reparaciones: reparacion.tipo_reparaciones
+    });
   }
 
   updateReparacion(): void {
     const token = localStorage.getItem('token') || '';
+    
     if (this.tempReparacion) {
+      this.tempReparacion.tipo_reparaciones = this.EditForm.get("tipo_reparaciones")?.value;
       this.reparacionService.updateReparacion(this.tempReparacion, token).subscribe(
         response => {
           this.loadReparaciones();
@@ -114,7 +127,7 @@ export class ReparacionesComponent implements OnInit {
           this.tempReparacion = null;
           this.registerMessage = response.msg;
           this.message = response.msg;
-          
+          this.EditForm.reset();
         },
         error => {
           this.registerMessage = 'Error al actualizar reparación. Por favor, inténtelo de nuevo.';
@@ -131,6 +144,9 @@ export class ReparacionesComponent implements OnInit {
         this.loadReparaciones();
         this.registerMessage = response.msg;
         this.message = response.msg;
+        if (this.selectedReparacion && this.selectedReparacion.id === id) {
+          this.cancelEdit(); // Llama a cancelEdit para resetear el formulario y las variables
+        }
       },
       error => {
         this.registerMessage = 'Error al eliminar reparación. Por favor, inténtelo de nuevo.';
