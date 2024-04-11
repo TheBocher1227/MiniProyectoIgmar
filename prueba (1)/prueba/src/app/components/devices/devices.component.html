@@ -1,0 +1,85 @@
+<!-- components/devices/devices.component.html -->
+<div class="container text-center">
+    <div class="container">
+        <h1 class="my-4 text-center">Dispositivos</h1>
+        <div *ngIf="devices && devices.length > 0" class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Numero</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Tipo de Dispositivo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead> 
+            <tbody>
+              <tr *ngFor="let device of devices">
+                <td>{{ device.id }}</td>
+                <td>{{ device.marca }}</td>
+                <td>{{ device.modelo }}</td>
+                <td>{{ device.tipo_dispositivos }}</td>
+                <td>
+                  <button class="btn btn-primary mx-2" (click)="editDevice(device)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+                  <button class="btn btn-danger" (click)="deleteDevice(device.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="messageupdatevalid" class="alert alert-success">{{ messageupdatevalid }}</div>
+        <div *ngIf="messagedeletevalid" class="alert alert-success">{{ messagedeletevalid }}</div>
+        <div *ngIf="!(devices && devices.length > 0)" class="alert alert-info">No hay dispositivos para mostrar.</div>
+      </div>
+    <hr>
+    <form *ngIf="tempDevice; else addDeviceForm" (submit)="updateDevice()" class="container" novalidate>
+      <div class="form-group">
+        <label for="marca">Marca:</label>
+        <input type="text" [(ngModel)]="tempDevice.marca" name="marca" id="marca" class="form-control" required>
+        <div *ngIf="messageinvalidmarca" class="alert alert-danger">{{ messageinvalidmarca}}</div>
+      </div>
+      <div class="form-group">
+        <label for="modelo">Modelo:</label>
+        <input type="text" [(ngModel)]="tempDevice.modelo" name="modelo" id="modelo" class="form-control" required>
+        <div *ngIf="messageinvalidmodelo" class="alert alert-danger">{{ messageinvalidmodelo}}</div>
+      </div>
+      <div class="form-group">
+        <label for="tipo_dispositivo">Tipo de dispositivo:</label>
+        <input type="text" [(ngModel)]="tempDevice.tipo_dispositivos" name="tipo_dispositivo" id="tipo_dispositivo" class="form-control" required>
+        <div *ngIf="messageinvalidtipo_dispositivos" class="alert alert-danger">{{ messageinvalidtipo_dispositivos}}</div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!updateForm.valid">Guardar cambios</button>
+      <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+
+      
+    </form>
+  
+
+
+
+    <ng-template #addDeviceForm>
+      <h2 *ngIf="rolUsuario === 1 || rolUsuario === 3">Agregar dispositivo</h2>
+      <form (submit)="addDevice(newDevice); newDevice = { id: 0, marca: '', modelo: '', tipo_dispositivos: '' }" class="my-4" *ngIf="rolUsuario === 1 || rolUsuario === 3" novalidate>
+        <div class="form-group">
+          <label for="new-marca">Marca:</label>
+          <input type="text" [(ngModel)]="newDevice.marca" name="new-marca" id="new-marca" class="form-control" required>
+          <div *ngIf="messagebadmarca" class="alert alert-danger">{{ messagebadmarca}}</div>
+        </div>
+        <div class="form-group">
+          <label for="new-modelo">Modelo:</label>
+          <input type="text" [(ngModel)]="newDevice.modelo" name="new-modelo" id="new-modelo" class="form-control" required>
+          <div *ngIf="messagebadmodelo" class="alert alert-danger">{{ messagebadmodelo }}</div>
+        </div>
+        <div class="form-group">
+          <label for="new-tipo-dispositivo">Tipo de dispositivo:</label>
+          <input type="text" [(ngModel)]="newDevice.tipo_dispositivos" name="new-tipo-dispositivo" id="new-tipo-dispositivo" class="form-control" required>
+          <div *ngIf="messagebadtipo_dispositivos" class="alert alert-danger">{{ messagebadtipo_dispositivos}}</div>
+        </div>
+        <button type="submit" class="btn btn-primary" >Agregar dispositivo</button>
+      </form>
+    </ng-template>
+  
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+    
+  </div>
+  

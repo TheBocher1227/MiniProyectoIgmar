@@ -1,0 +1,78 @@
+<div class="container text-center">
+    <h1 class="my-4">Reparaciones de Dispositivos</h1>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Dispositivo </th>
+          <th>Reparación </th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reparacionDispositivo of reparacionDispositivos">
+          <td>{{ reparacionDispositivo.id }}</td>
+          <td>{{ getDeviceName(reparacionDispositivo.dispositivo_id) }}</td>
+          <td>{{ getReparacionName(reparacionDispositivo.reparaciones_id) }}</td>
+          <td>{{ reparacionDispositivo.precio }}</td>
+          <td>
+            <button class="btn btn-primary mx-2" (click)="editReparacionDispositivo(reparacionDispositivo)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+            <button class="btn btn-danger" (click)="deleteReparacionDispositivo(reparacionDispositivo.id)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+      
+    </table>
+    
+    <hr>
+    
+    <form *ngIf="tempReparacionDispositivo; else addReparacionDispositivoForm" (submit)="updateReparacionDispositivo()" class="container">
+        <div class="form-group" *ngIf="tempReparacionDispositivo">
+            <label for="precio">Dispositivo:</label>
+            <select [(ngModel)]="tempReparacionDispositivo.dispositivo_id" name="new-dispositivo_id" id="new-dispositivo_id" class="form-control" required>
+                <option *ngFor="let device of devices" [value]="device.id">{{ device.marca }} {{ device.modelo }}</option>
+              </select>              
+        </div>
+        <div class="form-group" *ngIf="tempReparacionDispositivo">
+            <label for="precio">Reparacion:</label>
+            <select [(ngModel)]="tempReparacionDispositivo.reparaciones_id" name="new-reparaciones_id" id="new-reparaciones_id" class="form-control" required>
+                <option *ngFor="let reparacion of reparaciones" [value]="reparacion.id">{{ reparacion.tipo_reparaciones }}</option>
+              </select>
+              
+        </div>
+        <div class="form-group" *ngIf="tempReparacionDispositivo">
+            <label for="precio">Precio:</label>
+            <input type="text" [ngModel]="tempReparacionDispositivo?.precio" (ngModelChange)="tempReparacionDispositivo.precio = $event" name="precio" id="precio" class="form-control" required>
+        </div>               
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+    </form>
+    
+    <ng-template #addReparacionDispositivoForm>
+      <h2 *ngIf="rolUsuario === 1 || rolUsuario === 3">Agregar Reparación de Dispositivo</h2>
+      <form (submit)="addReparacionDispositivo()" class="my-4" *ngIf="rolUsuario === 1 || rolUsuario === 3">
+        <div class="form-group">
+            <label for="precio">Dispositivo:</label>
+            <select [(ngModel)]="newReparacionDispositivo.dispositivo_id" name="new-dispositivo_id" id="new-dispositivo_id" class="form-control" required>
+                <option *ngFor="let device of devices" [value]="device.id">{{ device.marca }} {{ device.modelo }}</option>
+              </select> 
+        </div>
+        <div class="form-group">
+            <label for="precio">Reparacion:</label>
+            <select [(ngModel)]="newReparacionDispositivo.reparaciones_id" name="new-reparaciones_id" id="new-reparaciones_id" class="form-control" required>
+                <option *ngFor="let reparacion of reparaciones" [value]="reparacion.id">{{ reparacion.tipo_reparaciones }}</option>
+              </select>
+        </div>
+        <div class="form-group">
+          <label for="new-precio">Precio:</label>
+          <input type="text" [(ngModel)]="newReparacionDispositivo.precio" name="new-precio" id="new-precio" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Reparación de Dispositivo</button>
+      </form>
+    </ng-template>
+    
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+</div>
+

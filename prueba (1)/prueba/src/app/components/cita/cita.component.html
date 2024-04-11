@@ -1,0 +1,107 @@
+<div class="container text-center">
+    <h1 class="my-4">Citas</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Fecha de Cita</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th>Dispositivo</th>
+                <th>Usuario</th>
+                <th>Hora</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let cita of citas">
+                <td>{{ cita.id }}</td>
+                <td>{{ cita.fecha_cita }}</td>
+                <td>{{ cita.motivo_cita }}</td>
+                <td>{{ cita.estado_cita }}</td>
+                <td>{{ cita.dispositivo }}</td>
+                <td>{{ cita.usuario }}</td>
+                <td>{{ cita.hora_cita }}</td>
+                <td *ngIf="rolUsuario === 1 ">
+                    <button class="btn btn-primary mx-2" (click)="editarCita(cita)">Editar</button>
+                    <button class="btn btn-danger" (click)="eliminarCita(cita.id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <form *ngIf="citaEditada; else agregarEditarForm" (submit)="actualizarCita()" class="container">
+        <div class="form-group">
+            <label for="fechaCita">Fecha de Cita:</label>
+            <input type="date" [(ngModel)]="citaEditada.fecha_cita" name="fechaCita" id="fechaCita" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="motivoCita">Motivo de Cita:</label>
+            <input type="text" [(ngModel)]="citaEditada.motivo_cita" name="motivoCita" id="motivoCita" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="estadoCita">Estado de Cita:</label>
+            <input type="text" [(ngModel)]="citaEditada.estado_cita" name="estadoCita" id="estadoCita" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="dispositivo">Dispositivo:</label>
+            <select [(ngModel)]="citaEditada.dispositivo" name="dispositivo" id="dispositivo" class="form-control" required>
+              <option *ngFor="let device of devices" [value]="device.id">{{ device.marca + " " + device.modelo }}</option>
+            </select>
+          </div>
+                    
+          <div class="form-group">
+            <label for="usuario">Usuario:</label>
+            <select [(ngModel)]="citaEditada.usuario" name="usuario" id="usuario" class="form-control" required>
+              <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+            </select>
+          </div>
+          
+        <div class="form-group">
+            <label for="hora">Hora:</label>
+            <input type="time" [(ngModel)]="citaEditada.hora_cita" name="hora" id="hora" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <button type="button" (click)="cancelarEdicion()" class="btn btn-secondary">Cancelar</button>
+            </form>
+            <ng-template #agregarEditarForm>
+                <h2 *ngIf="rolUsuario === 1 ">Agregar/Editar Cita</h2>
+                <form (submit)="agregarCita()" class="my-4" *ngIf="rolUsuario === 1 ">
+                  <div class="form-group">
+                    <label for="nuevaFechaCita">Fecha de Cita:</label>
+                    <input type="date" [(ngModel)]="nuevaCita.fecha_cita" name="nuevaFechaCita" id="nuevaFechaCita" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="nuevoMotivoCita">Motivo de Cita:</label>
+                    <input type="text" [(ngModel)]="nuevaCita.motivo_cita" name="nuevoMotivoCita" id="nuevoMotivoCita" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="nuevoEstadoCita">Estado de Cita:</label>
+                    <input type="text" [(ngModel)]="nuevaCita.estado_cita" name="nuevoEstadoCita" id="nuevoEstadoCita" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="nuevoDispositivo">Dispositivo:</label>
+                    <select [(ngModel)]="nuevaCita.dispositivo" name="nuevoDispositivo" id="nuevoDispositivo" class="form-control" required>
+                      <option *ngFor="let device of devices" [value]="device.id">{{ device.marca + " " + device.modelo }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="nuevoUsuario">Usuario:</label>
+                    <select [(ngModel)]="nuevaCita.usuario" name="nuevoUsuario" id="nuevoUsuario" class="form-control" required>
+                      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="nuevaHora">Hora:</label>
+                    <input type="time" [(ngModel)]="nuevaCita.hora_cita" name="nuevaHora" id="nuevaHora" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Agregar Cita</button>
+                </form>
+              </ng-template>
+              
+            
+            <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+        </div>          

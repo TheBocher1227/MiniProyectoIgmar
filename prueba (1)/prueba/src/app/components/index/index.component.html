@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+  <div class="container-fluid">
+    <a class="navbar-brand"  routerLinkActive="router-link-active">TecnoWeb</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" [routerLink]="['crud']" routerLinkActive="router-link-active">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['categorias']" routerLinkActive="router-link-active">Categorias</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['dispositivos']" routerLinkActive="router-link-active">Dispositivos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['reparaciones']" routerLinkActive="router-link-active">Reparaciones</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['accesorios']" routerLinkActive="router-link-active">Accesorios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['reparaciondispositivos']" routerLinkActive="router-link-active">Reparacion-Dispositivos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['ordenventa']" routerLinkActive="router-link-active">Orden venta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['ordenventaa']" routerLinkActive="router-link-active">Orden venta Accesorios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['cita']" routerLinkActive="router-link-active">Cita</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['ingreso']" routerLinkActive="router-link-active">Ingreso Reparacion</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['reporte']" routerLinkActive="router-link-active">Reporte</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['logs']" routerLinkActive="router-link-active">Logs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/login']" routerLinkActive="router-link-active" (click)="logout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container mt-4">
+  <router-outlet></router-outlet>
+</div>
+
+
+

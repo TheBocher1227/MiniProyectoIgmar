@@ -1,0 +1,97 @@
+<div class="container text-center">
+    <div class="container text-center">
+        <h1 class="my-4">Accesorios</h1>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Numero</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let accesorio of accesorios">
+                    <td>{{ accesorio.id }}</td>
+                    <td>{{ accesorio.nombre }}</td>
+                    <td>{{ accesorio.descripcion }}</td>
+                    <td>{{ accesorio.precio }}</td>
+                    <td>{{ accesorio.cantidad }}</td>
+                    <td>{{ getCategoriaName(+accesorio.categoria) }}</td>
+                    <td>
+                        <button class="btn btn-primary mx-2" (click)="editAccesorio(accesorio)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+                        <button class="btn btn-danger" (click)="deleteAccesorio(accesorio.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Aquí iría el resto de tu código... -->
+    </div>
+    
+    <hr>
+    
+    <form *ngIf="tempAccesorio; else addAccesorioForm" (submit)="updateAccesorio()" class="container">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" [(ngModel)]="tempAccesorio.nombre" name="nombre" id="nombre" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="descripcion">Descripcion:</label>
+        <input type="text" [(ngModel)]="tempAccesorio.descripcion" name="descripcion" id="descripcion" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="precio">Precio:</label>
+        <input type="number" [(ngModel)]="tempAccesorio.precio" name="precio" id="precio" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" [(ngModel)]="tempAccesorio.cantidad" name="cantidad" id="cantidad" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="categoria">Categoría:</label>
+        <select [(ngModel)]="tempAccesorio.categoria" name="categoria" id="categoria" class="form-control" required>
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.tipo_categoria }}</option>
+        </select>
+      </div> 
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+    </form>
+    
+    <ng-template #addAccesorioForm>
+      <h2 *ngIf="rolUsuario === 1 || rolUsuario === 3">Agregar Accesorio</h2>
+      <form (submit)="addAccesorio(newAccesorio)" class="my-4" *ngIf="rolUsuario === 1 || rolUsuario === 3">
+        <div class="form-group">
+          <label for="new-nombre">Nombre:</label>
+          <input type="text" [(ngModel)]="newAccesorio.nombre" name="new-nombre" id="new-nombre" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="new-descripcion">Descripcion:</label>
+          <input type="text" [(ngModel)]="newAccesorio.descripcion" name="new-descripcion" id="new-descripcion" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="new-precio">Precio:</label>
+          <input type="number" [(ngModel)]="newAccesorio.precio" name="new-precio" id="new-precio" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="new-cantidad">Cantidad:</label>
+          <input type="number" [(ngModel)]="newAccesorio.cantidad" name="new-cantidad" id="new-cantidad" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select [(ngModel)]="newAccesorio.categoria" name="categoria" id="categoria" class="form-control" required>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.tipo_categoria }}</option>
+            </select>
+          </div>          
+        <button type="submit" class="btn btn-primary">Agregar Accesorio</button>
+      </form>
+    </ng-template>
+    
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+  </div>
+  
+  

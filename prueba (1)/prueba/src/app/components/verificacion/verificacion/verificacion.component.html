@@ -1,0 +1,11 @@
+
+<div class="login-container">
+    <form (ngSubmit)="verificarCodigo(codigoForm)" #codigoForm="ngForm">
+      <label for="verificacion">Ingresa el código de verificación que se envio a tu correo:</label>
+      <input type="text" id="verificacion" name="verificacion" [(ngModel)]="codigoVerificacion" required>
+      <p></p>
+      <button type="submit">Verificar</button>
+      <p></p>
+      <div *ngIf="mensaje">{{ mensaje }}</div>
+    </form>
+  </div>

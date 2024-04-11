@@ -1,0 +1,30 @@
+<div class="container">
+    <h2>Logs</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Método</th>
+          <th>Ruta</th>
+          <th>Usuario</th>
+          <th>Fecha</th>
+          <th>Tablas</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs">
+          <td>{{ log.id }}</td>
+          <td>{{ log.metodo }}</td>
+          <td>{{ log.ruta }}</td>
+          <td>{{ log.usuario }}</td>
+          <td>{{ log.fecha }}</td>
+          <td>{{ log.tablas }}</td>
+          <td>
+            {{ log.data}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

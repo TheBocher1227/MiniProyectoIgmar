@@ -1,0 +1,42 @@
+<div class="container text-center">
+    <h1 class="my-4">Reparaciones</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numero</th>
+                <th>Tipo de Reparación</th>
+                <th *ngIf="rolUsuario === 1">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let reparacion of reparaciones">
+                <td>{{ reparacion.id }}</td>
+                <td>{{ reparacion.tipo_reparaciones }}</td>
+                <td >
+                    <button class="btn btn-primary mx-2" (click)="editReparacion(reparacion)" *ngIf="rolUsuario === 1 || rolUsuario === 3">Editar</button>
+                    <button class="btn btn-danger" (click)="deleteReparacion(reparacion.id)" *ngIf="rolUsuario === 1">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <hr>
+    <form *ngIf="tempReparacion; else addReparacionForm" (submit)="updateReparacion()" class="container">
+        <div class="form-group">
+            <label for="tipo_reparaciones">Tipo de Reparación:</label>
+            <input type="text" [(ngModel)]="tempReparacion.tipo_reparaciones" name="tipo_reparaciones" id="tipo_reparaciones" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>
+    </form>
+    
+    <ng-template #addReparacionForm>
+        <h2 *ngIf="rolUsuario === 1 || rolUsuario === 3">Agregar Reparación</h2>
+        <form (submit)="addReparacion(newReparacion.value); newReparacion.value=''" class="my-4" *ngIf="rolUsuario === 1 || rolUsuario === 3">
+            <input type="text" #newReparacion name="newReparacion" required class="form-control my-2">
+            <button type="submit" class="btn btn-primary">Agregar Reparación</button>
+        </form>
+    </ng-template>
+
+    <div *ngIf="message" class="alert alert-success">{{ message }}</div>
+</div>
+
