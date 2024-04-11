@@ -103,6 +103,7 @@ export class OrdenVentaComponent implements OnInit {
       user: ordenVenta.user,
       tipoVenta: ordenVenta.tipo_venta
     });
+    this.nuevoOrdenForm.reset();
   }
 
   actualizarOrdenVenta(): void {

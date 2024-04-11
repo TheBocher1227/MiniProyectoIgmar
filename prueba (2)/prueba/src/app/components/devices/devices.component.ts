@@ -87,6 +87,7 @@ export class DevicesComponent implements OnInit {
         this.messagebadmodelo = null;
         this.messagebadtipo_dispositivos = null;
         this.messageupdatevalid=null;
+        this.messagedeletevalid = null;
         this.newDeviceForm.reset();
         
       },
@@ -152,6 +153,7 @@ export class DevicesComponent implements OnInit {
     this.deviceService.deleteDevice(id, token).subscribe(
       response => {
         this.loadDevices();
+        this.message = null;
         this.messagedeletevalid = response.msg;
         this.messageupdatevalid=null;
         this.messageinvalidmarca = null;

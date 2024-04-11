@@ -130,7 +130,7 @@ export class IngresoReparacionComponent implements OnInit {
           fecha_ingreso: new Date(),
           estatus: ''
         };
-        this.mensaje = response.Msg;
+        this.mensaje = "Se agrego el ingreso";
       },
       error => {
         this.mensaje = 'Error al agregar ingreso. Por favor, inténtelo de nuevo.';
@@ -150,6 +150,7 @@ export class IngresoReparacionComponent implements OnInit {
       fecha_ingreso: ingreso.fecha_ingreso, // Asegúrate de formatear la fecha correctamente
       estatus: ingreso.estatus
     });
+    this.mensaje = null;
   }
 
   cancelarEdicion(): void {
@@ -158,6 +159,7 @@ export class IngresoReparacionComponent implements OnInit {
       this.ingresoEditadoBackup = null;
     }
     this.edicionActiva = false;
+    this.mensaje = null;
   }
 
   actualizarIngreso(): void {
@@ -176,6 +178,7 @@ this.ingresoEditado.estatus = this.editarIngresoForm.get('estatus')?.value;
           this.mensaje = response.msg;
           this.edicionActiva = false;
           this.ingresoEditadoBackup = null;
+          this.mensaje = "Se edito correctamente";
         },
         error => {
           this.mensaje = 'Error al actualizar ingreso. Por favor, inténtelo de nuevo.';
@@ -201,6 +204,7 @@ this.ingresoEditado.estatus = this.editarIngresoForm.get('estatus')?.value;
       };
       this.edicionActiva = false; // Ocultar el formulario de edición
       this.ingresoEditadoBackup = null;
+      this.mensaje = null; //
     }
     this.ingresoReparacionService.deleteIngreso(id, token).subscribe(
       response => {

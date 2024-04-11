@@ -1,11 +1,12 @@
 import { Component, NgModule } from '@angular/core';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css', 
 })
@@ -30,6 +31,15 @@ export class IndexComponent {
       });
     } else {
       this.router.navigate(['/login']);
+    }
+  }
+  rolUsuario: number = 0;
+  loadUserRole(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.authService.verifyToken(token).subscribe(response => {
+        this.rolUsuario = response['tipo usuario'];
+      });
     }
   }
 }

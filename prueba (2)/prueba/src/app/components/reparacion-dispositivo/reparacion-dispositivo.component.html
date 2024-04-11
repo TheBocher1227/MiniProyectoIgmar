@@ -45,6 +45,9 @@
       <div class="form-group">
           <label for="precio">Precio:</label>
           <input formControlName="precio" id="precio" type="text" class="form-control" required [value]="tempReparacionDispositivo.precio">
+          <div *ngIf="editReparacionDispositivoForm.get('precio')?.errors?.['required'] && editReparacionDispositivoForm.get('precio')?.touched" class="alert alert-danger">
+            El precio es requerido
+          </div>
       </div>               
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
     <button type="button" (click)="cancelEdit()" class="btn btn-secondary">Cancelar</button>

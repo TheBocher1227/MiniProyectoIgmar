@@ -128,6 +128,7 @@ export class CitaComponent implements OnInit {
           this.citaEditada = null;
           this.citaEditadaBackup = null;
           this.mensaje = response.msg;
+          this.editarCitaForm.reset();
         },
         error => {
           this.mensaje = 'Error al actualizar cita. Por favor, inténtelo de nuevo.';
@@ -143,6 +144,7 @@ export class CitaComponent implements OnInit {
         this.cargarCitas();
         this.nuevaCita = { id: 0, fecha_cita: new Date(), motivo_cita: '', estado_cita: '',  dispositivo: '', usuario: 0, hora_cita: Date.now().toString() };
         this.mensaje = response.msg;
+        this.nuevoCitaForm.reset();
       },
       error => {
         this.mensaje = 'Error al agregar cita. Por favor, inténtelo de nuevo.';
@@ -159,7 +161,7 @@ export class CitaComponent implements OnInit {
     this.citaService.deleteordenventa(id, token).subscribe(
       response => {
         this.cargarCitas();
-        this.mensaje = response.msg;
+        this.mensaje = "Se elimino la cita";
       },
       error => {
         this.mensaje = 'Error al eliminar cita. Por favor, inténtelo de nuevo.';

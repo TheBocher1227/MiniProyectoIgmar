@@ -24,7 +24,7 @@
           La contraseña es requerida
         </div>
       </div>
-      <button type="submit" [disabled]="!registerForm.valid" class="btn btn-primary">Registrar Usuario</button>
+      <button type="submit"  class="btn btn-primary">Registrar Usuario</button>
       <div *ngIf="registerMessage" [class.message-success]="state" [class.message-error]="!state" class="message">
         {{ registerMessage }}
       </div>

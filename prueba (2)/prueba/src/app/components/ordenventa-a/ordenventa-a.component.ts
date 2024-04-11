@@ -107,6 +107,7 @@ export class OrdenventaAccesoriosComponent implements OnInit {
       accesorio: ordenVenta.accesorio,
       cantidad: ordenVenta.cantidad
     });// Crear una copia de respaldo
+    this.mensaje = null;
   }
   
 
@@ -165,7 +166,7 @@ export class OrdenventaAccesoriosComponent implements OnInit {
     this.ordenVentaAService.deleteordenventaA(id, token).subscribe(
       response => {
         this.cargarOrdenesVentaA();
-        this.mensaje = response.msg;
+        this.mensaje = "Se elimino el registro";
       },
       error => {
         this.mensaje = error.message;

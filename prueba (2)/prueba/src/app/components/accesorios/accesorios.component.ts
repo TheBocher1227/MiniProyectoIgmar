@@ -94,6 +94,7 @@ export class AccesoriosComponent implements OnInit {
         console.log(response);
         this.selectedAccesorio = null;
         this.tempAccesorio = null;
+        this.newAccesorioForm.reset();
         this.newAccesorio= { id: 0, nombre: '', descripcion: '', precio: 0, cantidad: 0, categoria: '' };
       },
       error => {
@@ -151,6 +152,7 @@ export class AccesoriosComponent implements OnInit {
         this.loadAccesorios();
         this.registerMessage = response.msg;
         this.message = response.msg;
+        this.message = "Dispositivo eliminado correctamente";
       },
       error => {
         this.registerMessage = 'Error al eliminar accesorio. Por favor, inténtelo de nuevo.';

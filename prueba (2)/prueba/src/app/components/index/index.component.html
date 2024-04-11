@@ -6,40 +6,40 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1">
           <a class="nav-link active" aria-current="page" [routerLink]="['crud']" routerLinkActive="router-link-active">Home</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 3 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['categorias']" routerLinkActive="router-link-active">Categorias</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 3 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['dispositivos']" routerLinkActive="router-link-active">Dispositivos</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 3 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['reparaciones']" routerLinkActive="router-link-active">Reparaciones</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 3 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['accesorios']" routerLinkActive="router-link-active">Accesorios</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['reparaciondispositivos']" routerLinkActive="router-link-active">Reparacion-Dispositivos</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['ordenventa']" routerLinkActive="router-link-active">Orden venta</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['ordenventaa']" routerLinkActive="router-link-active">Orden venta Accesorios</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['cita']" routerLinkActive="router-link-active">Cita</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['ingreso']" routerLinkActive="router-link-active">Ingreso Reparacion</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1 || rolUsuario === 2">
           <a class="nav-link" [routerLink]="['reporte']" routerLinkActive="router-link-active">Reporte</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="rolUsuario === 1">
           <a class="nav-link" [routerLink]="['logs']" routerLinkActive="router-link-active">Logs</a>
         </li>
         <li class="nav-item">
