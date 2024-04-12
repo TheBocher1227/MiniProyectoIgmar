@@ -7,7 +7,7 @@ import { ApiResponse, ApiResponse8, IngresoReparacion } from '../Interfaces/api-
   providedIn: 'root'
 })
 export class IngresoReparacionService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth';
+  private apiUrl = 'http://192.168.116.175:8000/api/auth';
 
   constructor(private http: HttpClient) {}
 

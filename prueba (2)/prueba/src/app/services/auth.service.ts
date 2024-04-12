@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private verifyTokenUrl = 'http://127.0.0.1:8000/api/auth/verify';
+  private verifyTokenUrl = 'http://192.168.116.175:8000/api/auth/verify';
 
   constructor(private http: HttpClient) {}
 
@@ -14,7 +14,7 @@ export class AuthService {
     return this.http.post<any>(this.verifyTokenUrl, { token });
   }
 
-  apiUrl = 'http://127.0.0.1:8000/api/auth';
+  apiUrl = 'http://192.168.116.175:8000/api/auth';
 
   verificarCodigo(verificacion: string, token: string): Observable<any> {
     const url = `${this.apiUrl}/verificar`;

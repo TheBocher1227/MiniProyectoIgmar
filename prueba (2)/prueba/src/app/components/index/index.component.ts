@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, OnInit } from '@angular/core';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -11,9 +11,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './index.component.css', 
 })
 
-export class IndexComponent {
+export class IndexComponent implements OnInit {
 
   constructor(private authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit(): void {
+    this.loadUserRole();
   }
   logout(): void {
     const token = localStorage.getItem('token');
@@ -39,6 +43,7 @@ export class IndexComponent {
     if (token) {
       this.authService.verifyToken(token).subscribe(response => {
         this.rolUsuario = response['tipo usuario'];
+        
       });
     }
   }

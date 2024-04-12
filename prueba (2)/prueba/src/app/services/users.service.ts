@@ -11,20 +11,20 @@ import { CreateUser } from '../Interfaces/create-user';
 export class UsersService {
 
   constructor(private http: HttpClient) { }
-  private apiUrl = 'http://127.0.0.1:8000/api/auth';
+  private apiUrl = 'http://192.168.116.175:8000/api/auth';
   
   register(user: UserRegister): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/register';
+    const url = 'http://192.168.116.175:8000/api/auth/register';
     return this.http.post<UserRegister>(url, user);
   }
 
   getUsers(): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/get';
+    const url = 'http://192.168.116.175:8000/api/auth/get';
     return this.http.get<any>(url);
   }
 
   addUser(user: CreateUser, token: string): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/post';
+    const url = 'http://192.168.116.175:8000/api/auth/post';
     const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`

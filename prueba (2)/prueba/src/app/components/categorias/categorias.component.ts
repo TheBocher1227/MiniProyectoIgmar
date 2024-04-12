@@ -9,6 +9,7 @@ import { ServerResponse } from '../../Interfaces/server-respone';
 import { AuthService } from '../../services/auth.service';
 import { Subject, takeUntil } from 'rxjs';
 import { SseService } from '../../services/sse.service';
+import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'app-categories',
@@ -34,13 +35,13 @@ export class CategoriesComponent implements OnInit {
   registerMessage: string | null = null;  
   sseMessage: string = '';
   previousMessage: Category | null = null;
-
+  
   categoriaform = this.fb.group({
     tipo_categoria: ['', Validators.required],
   });
 
   updateForm: FormGroup = new FormGroup({});
-  constructor(private formBuilder: FormBuilder,private fb: FormBuilder,private categoryService: CategoryService, private AuthService: AuthService,private sseService: SseService ) {}
+  constructor(private ngzone: NgZone,private formBuilder: FormBuilder,private fb: FormBuilder,private categoryService: CategoryService, private AuthService: AuthService,private sseService: SseService ) {}
   
   eventSource: EventSource | null = null;
   ngOnInit(): void {
@@ -50,28 +51,8 @@ export class CategoriesComponent implements OnInit {
       tipo_categoria: ['', Validators.required]
     });
     this.updateForm.patchValue({ tipo_categoria: '' });
-    const eventSource = new EventSource('http://127.0.0.1:8000/api/auth/sse');
-    eventSource.onmessage = event => {
-      try {
-        const message: Category = JSON.parse(event.data);
-
-        // Verifica si el ID de la categoría ha cambiado
-        if (!this.previousMessage || message.id !== this.previousMessage.id) {
-          console.log('Nuevo mensaje recibido:', message); // Agrega una declaración de consola para depurar
-          this.sseMessage = "Nueva categoria agregada";
-          this.previousMessage = message;
-          this.loadCategories();
-          setTimeout(() => {
-            this.sseMessage = ''; // Oculta el mensaje después de 3 segundos
-          }, 3000);
-        } else {
-          console.log('Mensaje recibido pero no se mostró:', message); // Agrega una declaración de consola para depurar
-        }
-        
-      } catch (error) {
-        console.error('Error al analizar el mensaje SSE:', error);
-      }
-    };      
+    this.startSSE();
+       
 
 
     
@@ -83,7 +64,33 @@ export class CategoriesComponent implements OnInit {
     }
   }
   
+  startSSE(): void{
+    
+    const eventSource = new EventSource('http://192.168.116.175:8000/api/sse');
+
+    eventSource.onmessage = (event) => {
+      console.log(event.data);
+      
+      if(event.data == "true") {
+        console.log('Se ha actualizado la tabla')
+        this.sseMessage='Se ha actualizado la tabla';
+        
+
+        this.ngzone.run(() => {
+          this.loadCategories();
+          setTimeout(() => {
+          this.sseMessage = '';
+        }, 3000);
+        });
+        //eventSource.close()
+      }
+
+    };
+      }
+
+    
   
+
   
   loadCategories(): void {
     const token = localStorage.getItem('token') || '';

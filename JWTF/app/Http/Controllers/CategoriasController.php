@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Categoria;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Cache;
 
 class CategoriasController extends Controller
 {
@@ -41,7 +42,7 @@ class CategoriasController extends Controller
        
         $user_id = Auth::id();
         
-        
+        Cache::put('SSEE', true, 5);
         LogHistoryController::store($request, 'categoria', $logData, $user_id);
     
         return response()->json(["msg" => "Categoria agregada correctamente"], 200);
@@ -92,28 +93,29 @@ class CategoriasController extends Controller
     }
 
 
-    public function sendSSE()
-    {
-        $response = new StreamedResponse(function () {
-                $categoria = Categoria::latest()->first();
-                if($categoria)
-                {
-                    $sseMessage = "data: " . json_encode($categoria) . "\n\n";
-                    echo $sseMessage;
-                }
-                else
-                {
-                    echo "\n\n";
-                }               
-                ob_flush();
-                flush();
-                die();
-                
-        });
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->headers->set('Cache-Control', 'no-cache');
-        $response->headers->set('Connection', 'keep-alive');
-        return $response;
+    public function sendSSE(Request $request)
+    {    
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no');
+        header('Access-Control-Allow-Origin:*');
+
+
+        if(Cache::has('SSEE')) {
+           
+            echo "data: " . json_encode(true) . "\n\n";
+            ob_flush();
+            flush();
+            
+
+        }else{
+            echo "" . "\n\n";
+            ob_flush();
+            flush();
+        }
+
+        sleep(1);
     }
     
    

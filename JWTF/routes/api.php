@@ -116,8 +116,10 @@ Route::group([
 
 
     Route::get('logs',[LogHistoryController::class,'index']);
-    Route::get('sse',[CategoriasController::class,'sendSSE']);
+    
 });
+
+Route::get('sse',[CategoriasController::class,'sendSSE']);
 
 
 

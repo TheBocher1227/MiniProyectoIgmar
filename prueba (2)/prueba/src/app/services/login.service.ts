@@ -9,7 +9,7 @@ import { User } from '../Interfaces/user-interface';
 })
 
 export class LoginService {
-  private loginURL = "http://127.0.0.1:8000/api/auth/login";
+  private loginURL = "http://192.168.116.175:8000/api/auth/login";
   private token: string|null = null;
   private static instance: LoginService
 
@@ -22,7 +22,7 @@ export class LoginService {
   }
   
   login(email: string, password: string): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/login';
+    const url = 'http://192.168.116.175:8000/api/auth/login';
     return this.http.post<Login>(url, { email, password });
   }
 
@@ -40,18 +40,18 @@ export class LoginService {
   }
 
   Verificar(): Observable<any> {
-    let url = 'http://127.0.0.1:8000/api/auth/me'
+    let url = 'http://192.168.116.175:8000/api/auth/me'
     return this.http.post<any>(url, null)
   }
 
 
   register(user: User): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/register';
+    const url = 'http://192.168.116.175:8000/api/auth/register';
     return this.http.post<User>(url, user);
   }
   
   verificarToken(token: string): Observable<any> {
-    const url = 'http://127.0.0.1:8000/api/auth/verify';
+    const url = 'http://192.168.116.175:8000/api/auth/verify';
     return this.http.post<any>(url, { token });
   }
   

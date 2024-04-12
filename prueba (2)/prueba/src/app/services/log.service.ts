@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LogService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth/logs';
+  private apiUrl = 'http://192.168.116.175:8000/api/auth/logs';
 
   constructor(private http: HttpClient) {}
 

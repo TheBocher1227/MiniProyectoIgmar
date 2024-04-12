@@ -9,7 +9,7 @@ import { ApiResponse } from '../Interfaces/api-response';
   providedIn: 'root'
 })
 export class DeviceService {
-  private apiUrl = 'http://127.0.0.1:8000/api/auth';
+  private apiUrl = 'http://192.168.116.175:8000/api/auth';
 
   constructor(private http: HttpClient) {}
 
